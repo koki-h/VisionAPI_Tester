@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="basicCamera" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -15,11 +16,69 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bSD-Q7-Qy9">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="506"/>
+                            </imageView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="T2A-8H-szr">
+                                <rect key="frame" x="0.0" y="550" width="600" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="rf7-7q-txX"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem title="Start" id="wkt-NW-jIQ">
+                                        <connections>
+                                            <action selector="cameraStart:" destination="BYZ-38-t0r" id="hW4-IK-d0q"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="W0h-as-1JL"/>
+                                    <barButtonItem title="Save" id="nBG-6d-grA">
+                                        <connections>
+                                            <action selector="savePic:" destination="BYZ-38-t0r" id="HlS-te-wV4"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="ycb-VI-f6O"/>
+                                    <barButtonItem title="Album" id="j1c-Su-EEj">
+                                        <connections>
+                                            <action selector="showAlbum:" destination="BYZ-38-t0r" id="nd4-8c-J8V"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wd1-pM-TnF">
+                                <rect key="frame" x="0.0" y="517" width="600" height="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="T2A-8H-szr" firstAttribute="top" secondItem="wd1-pM-TnF" secondAttribute="bottom" constant="13" id="12C-wE-M1X"/>
+                            <constraint firstItem="bSD-Q7-Qy9" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="4nL-Oe-DYZ"/>
+                            <constraint firstAttribute="trailing" secondItem="wd1-pM-TnF" secondAttribute="trailing" id="7Ie-e7-iP9"/>
+                            <constraint firstItem="bSD-Q7-Qy9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Wz9-d5-Hlm"/>
+                            <constraint firstItem="wd1-pM-TnF" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ZH8-Ye-Rz0"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="T2A-8H-szr" secondAttribute="bottom" id="k14-Pb-ZYZ"/>
+                            <constraint firstItem="T2A-8H-szr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="lNU-bh-LqN"/>
+                            <constraint firstAttribute="trailing" secondItem="bSD-Q7-Qy9" secondAttribute="trailing" id="vqt-ph-Yck"/>
+                            <constraint firstItem="T2A-8H-szr" firstAttribute="top" secondItem="bSD-Q7-Qy9" secondAttribute="bottom" constant="44" id="xZ9-KD-ayG"/>
+                            <constraint firstAttribute="trailing" secondItem="T2A-8H-szr" secondAttribute="trailing" id="y0M-Ar-L8a"/>
+                        </constraints>
                     </view>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
+                    <splitViewMasterSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="bAlbum" destination="j1c-Su-EEj" id="MrT-bq-6sZ"/>
+                        <outlet property="bCameraStart" destination="wkt-NW-jIQ" id="nBd-XU-KkX"/>
+                        <outlet property="bSavePic" destination="nBG-6d-grA" id="gzf-h5-6qX"/>
+                        <outlet property="cameraView" destination="bSD-Q7-Qy9" id="oty-6S-2D5"/>
+                        <outlet property="label" destination="wd1-pM-TnF" id="jya-t1-aVP"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="245" y="337"/>
         </scene>
     </scenes>
 </document>
