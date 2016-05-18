@@ -14,28 +14,31 @@ import UIKit
 // 参考情報(APIキーの取得方法など)：https://syncer.jp/cloud-vision-api
 
 class GoogleRequest: NSObject,APIRequest {
-    var key: String = APIkeys.GoogleKey
-    var result: String = ""
+    let key = APIkeys.GoogleKey
+    var result = ""
     
     func send(image: UIImage,callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->()) {
         let imagedata:String = base64EncodeImage(image) // 画像をJSONに入れるためにbase64エンコードする
         let request = createRequest(imagedata)
+        let start_time = NSDate()
         let session = NSURLSession.sharedSession()
         // run the request
         let task = session.dataTaskWithRequest(request, completionHandler: {
             data, response, error -> Void in
+            let response_time = abs(Float(start_time.timeIntervalSinceNow))
+            self.result = "Response Time:" + String.init(response_time) + "s\n"
             callback(data: data,response: response, error: error)
             if (data != nil && data!.length != 0 && error == nil) {
                 do {
                     let result_dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as! NSDictionary
-                    self.result = result_dict.description
+                    self.result += result_dict.description
                 } catch {
-                    self.result = "Google API JSON Parse Error.¥n" + String.init(data: data!, encoding: NSUTF8StringEncoding)!
+                    self.result += "Google API JSON Parse Error.¥n" + String.init(data: data!, encoding: NSUTF8StringEncoding)!
                 }
                 NSLog("Google:%@",String.init(data: data!, encoding: NSUTF8StringEncoding)!)
             } else {
                 NSLog("Google:%@",error!)
-                self.result = "Google API Error." + error!.localizedDescription
+                self.result += "Google API Error." + error!.localizedDescription
             }
         })
         task.resume()

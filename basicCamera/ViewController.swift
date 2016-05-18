@@ -28,6 +28,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var current_result:API = API.None
     let r_google = GoogleRequest()
     let r_ms = MSRequest()
+    let r_ibm = IBMRequest()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,6 +86,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                     self.label.text = ""
                 }
             })
+            r_ibm.send(pickedImage, callback: {_,_,_ in
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.bIBM.enabled = true
+                    self.label.text = ""
+                }
+            })
         }
         
         //閉じる処理
@@ -110,8 +117,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
 
     @IBAction func showResultIBM(sender: AnyObject) {
-        let text = "IBM結果"
-        toggleLayer(API.IBM, text: text)
+        toggleLayer(API.IBM, text: r_ibm.result)
     }
     
     private func toggleLayer(api_type:API, text:String) {
@@ -132,7 +138,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func showLayer(text:String) {
         scrollText.text = text
         scrollText.hidden = false
-        
     }
     
     func hideLayer() {

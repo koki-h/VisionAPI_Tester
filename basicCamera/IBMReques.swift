@@ -1,5 +1,5 @@
 //
-//  MSRequest.swift
+//  IBMReques.swift
 //  basicCamera
 //
 //  Created by koki on 2016/05/18.
@@ -9,19 +9,20 @@
 import Foundation
 import UIKit
 
-// for Microsoft Cognitive Services Computer Vision API
-// https://www.microsoft.com/cognitive-services/en-us/computer-vision-api
+// for IBM Watson Developer Cloud Visual Recognition
+// http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition.html
 
-class MSRequest: NSObject,APIRequest {
-    let key = APIkeys.MSKey
-    var result = ""
+class IBMRequest: NSObject,APIRequest {
+    let key      = ""
+    let uname    = APIkeys.IBMUname
+    let password = APIkeys.IBMPass
+    var result:String = ""
     
     func send(image:UIImage,callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->()) {
         let request = createRequest()
         var imagedata = UIImagePNGRepresentation(image)
-        
-        // Resize the image if it exceeds the 4MB API limit
-        if (imagedata?.length > 4194304) {
+        // とりあえず小さめに
+        if (imagedata?.length > 2097152) {
             let oldSize: CGSize = image.size
             let newSize: CGSize = CGSizeMake(800, oldSize.height / oldSize.width * 800)
             imagedata = ImageUtil.resizeImage(newSize, image: image)
@@ -39,24 +40,22 @@ class MSRequest: NSObject,APIRequest {
                     let result_dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as! NSDictionary
                     self.result += result_dict.description
                 } catch {
-                    self.result += "MS API JSON Parse Error.\n" + String.init(data: data!, encoding: NSUTF8StringEncoding)!
+                    self.result += "IBM API JSON Parse Error.\n" + String.init(data: data!, encoding: NSUTF8StringEncoding)!
                 }
-                NSLog("MS:%@",String.init(data: data!, encoding: NSUTF8StringEncoding)!)
+                NSLog("IBM:%@",String.init(data: data!, encoding: NSUTF8StringEncoding)!)
             } else {
-                NSLog("MS:%@",error!)
-                self.result += "MS API Error." + error!.localizedDescription
+                NSLog("IBM:%@",error!)
+                self.result += "IBM API Error." + error!.localizedDescription
             }
         })
         task.resume()
     }
-    
-    
+
     func createRequest()->NSMutableURLRequest {
         let request = NSMutableURLRequest(
-            URL: NSURL(string: "https://api.projectoxford.ai/vision/v1/analyses?visualFeatures=ALL")!)
+            URL: NSURL(string: "https://\(uname):\(password)@gateway.watsonplatform.net/visual-recognition-beta/api/v2/classify?version=2015-12-02")!)
         request.HTTPMethod = "POST"
         request.addValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
-        request.addValue(key, forHTTPHeaderField: "Ocp-Apim-Subscription-Key")
         return request
     }
 
