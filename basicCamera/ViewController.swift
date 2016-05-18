@@ -11,13 +11,14 @@ import UIKit
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     @IBOutlet weak var cameraView: UIImageView!
+    @IBOutlet weak var scrollText: UITextView!
     
     @IBOutlet weak var bCameraStart: UIBarButtonItem!
     @IBOutlet weak var bGoogle: UIBarButtonItem!
     @IBOutlet weak var bMS: UIBarButtonItem!
     @IBOutlet weak var bIBM: UIBarButtonItem!
     @IBOutlet weak var label: UILabel!
-    let resultLayer = CATextLayer()
+    //let resultLayer = CATextLayer()
     enum API{
         case None
         case Google
@@ -94,52 +95,42 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func showResultGoogle(sender: AnyObject) {
-        if current_result == API.Google {
-            hideLayer()
-            current_result = API.None
-        } else {
-            showLayer(r_google.result)
-            current_result = API.Google
-            
-        }
+        toggleLayer(API.Google, text: r_google.result)
     }
     
     @IBAction func showResultMS(sender: AnyObject) {
-        showLayer("MS結果")
+        let text = "MS結果"
+        toggleLayer(API.MS, text: text)
     }
 
     @IBAction func showResultIBM(sender: AnyObject) {
-        showLayer("IBM結果")
+        let text = "IBM結果"
+        toggleLayer(API.IBM, text: text)
+    }
+    
+    private func toggleLayer(api_type:API, text:String) {
+        if current_result == api_type {
+            hideLayer()
+            current_result = API.None
+        } else {
+            showLayer(text)
+            current_result = api_type
+        }
     }
     
     func initLayer() {
-        let marginSizeX = 10.0 as CGFloat
-        let marginSizeY = 30.0 as CGFloat
-        let layerWidth = cameraView.frame.width - marginSizeX * 2
-        let layerHeight = cameraView.frame.height - marginSizeY * 2
-        let layerX = cameraView.frame.origin.x + marginSizeX
-        let layerY = cameraView.frame.origin.y + marginSizeY
-        let layerBounds:CGRect = CGRectMake(layerX, layerY, layerWidth, layerHeight);
-        
-        resultLayer.backgroundColor = UIColor.blackColor().CGColor
-        resultLayer.foregroundColor = UIColor.whiteColor().CGColor
-        resultLayer.opacity = 0.5
-        resultLayer.frame = layerBounds
-        resultLayer.wrapped = true
-        //resultLayer.font = ""
-        resultLayer.fontSize=20.0
-        resultLayer.contentsScale = UIScreen.mainScreen().scale
-        self.view.layer.addSublayer(resultLayer);
-        resultLayer.hidden = true
+        scrollText.editable = false
+        scrollText.hidden = true
     }
     
     func showLayer(text:String) {
-        resultLayer.string = text as AnyObject;
-        resultLayer.hidden = false
+        scrollText.text = text
+        scrollText.hidden = false
+        
     }
     
     func hideLayer() {
-        resultLayer.hidden = true
+        scrollText.hidden = true
     }
 }
 
