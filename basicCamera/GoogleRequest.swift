@@ -13,27 +13,28 @@ class GoogleRequest: NSObject,APIRequest {
     var key: String = APIkeys.GoogleKey
     var result: String = ""
     
-    func send(image: UIImage,callback:(data:NSData, response:NSURLResponse, error:NSError?)->()) {
-        let imagedata:String = base64EncodeImage(image)
+    func send(image: UIImage,callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->()) {
+        let imagedata:String = base64EncodeImage(image) // 画像をJSONに入れるためにbase64エンコードする
         let request = createRequest(imagedata)
-        RequestSender.send(request, callback:{data, response, error -> Void in
+        let session = NSURLSession.sharedSession()
+        // run the request
+        let task = session.dataTaskWithRequest(request, completionHandler: {
+            data, response, error -> Void in
             callback(data: data,response: response, error: error)
-            if (data.length != 0 && error == nil) {
-                self.result = String.init(data: data, encoding: NSUTF8StringEncoding)!
+            if (data != nil && data!.length != 0 && error == nil) {
+                do {
+                    let result_dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as! NSDictionary
+                    self.result = result_dict.description
+                } catch {
+                    self.result = "Google API JSON Parse Error.¥n" + String.init(data: data!, encoding: NSUTF8StringEncoding)!
+                }
+                NSLog("Google:%@",String.init(data: data!, encoding: NSUTF8StringEncoding)!)
             } else {
-                NSLog("%@",error!)
+                NSLog("Google:%@",error!)
                 self.result = "Google API Error." + error!.localizedDescription
             }
         })
-    }
-    
-    func resizeImage(imageSize: CGSize, image: UIImage) -> NSData {
-        UIGraphicsBeginImageContext(imageSize)
-        image.drawInRect(CGRectMake(0, 0, imageSize.width, imageSize.height))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        let resizedImage = UIImagePNGRepresentation(newImage)
-        UIGraphicsEndImageContext()
-        return resizedImage!
+        task.resume()
     }
     
     func base64EncodeImage(image: UIImage) -> String {
@@ -43,7 +44,7 @@ class GoogleRequest: NSObject,APIRequest {
         if (imagedata?.length > 2097152) {
             let oldSize: CGSize = image.size
             let newSize: CGSize = CGSizeMake(800, oldSize.height / oldSize.width * 800)
-            imagedata = resizeImage(newSize, image: image)
+            imagedata = ImageUtil.resizeImage(newSize, image: image)
         }
         
         return imagedata!.base64EncodedStringWithOptions(.EncodingEndLineWithCarriageReturn)

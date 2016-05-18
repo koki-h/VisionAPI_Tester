@@ -18,7 +18,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var bMS: UIBarButtonItem!
     @IBOutlet weak var bIBM: UIBarButtonItem!
     @IBOutlet weak var label: UILabel!
-    //let resultLayer = CATextLayer()
+
     enum API{
         case None
         case Google
@@ -27,6 +27,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     var current_result:API = API.None
     let r_google = GoogleRequest()
+    let r_ms = MSRequest()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,9 +73,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             cameraView.contentMode = .ScaleAspectFit
             cameraView.image = pickedImage
-            r_google.send(pickedImage, callback: {_,_,_ in 
+            r_google.send(pickedImage, callback: {_,_,_ in
                 dispatch_async(dispatch_get_main_queue()) {
                     self.bGoogle.enabled = true
+                    self.label.text = ""
+                }
+            })
+            r_ms.send(pickedImage, callback: {_,_,_ in
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.bMS.enabled = true
                     self.label.text = ""
                 }
             })
@@ -99,8 +106,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func showResultMS(sender: AnyObject) {
-        let text = "MS結果"
-        toggleLayer(API.MS, text: text)
+        toggleLayer(API.MS, text: r_ms.result)
     }
 
     @IBAction func showResultIBM(sender: AnyObject) {
