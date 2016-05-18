@@ -9,6 +9,9 @@
 import Foundation
 import UIKit
 
+// for Microsoft Cognitive Services Computer Vision API
+// https://www.microsoft.com/cognitive-services/en-us/computer-vision-api
+
 class MSRequest: NSObject,APIRequest {
     var key:String = APIkeys.MSKey
     var result:String = ""

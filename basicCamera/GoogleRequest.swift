@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 
+// for Gooogle Cloud Vision API
+// https://cloud.google.com/vision/docs/?hl=ja
+// 参考情報(APIキーの取得方法など)：https://syncer.jp/cloud-vision-api
+
 class GoogleRequest: NSObject,APIRequest {
     var key: String = APIkeys.GoogleKey
     var result: String = ""
