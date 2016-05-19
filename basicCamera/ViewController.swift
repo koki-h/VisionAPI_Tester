@@ -74,23 +74,25 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             cameraView.contentMode = .ScaleAspectFit
             cameraView.image = pickedImage
-            r_google.send(pickedImage, callback: {_,_,_ in
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+                self.r_google.send(pickedImage, callback: {_,_,_ in
                 dispatch_async(dispatch_get_main_queue()) {
                     self.bGoogle.enabled = true
                     self.label.text = ""
                 }
             })
-            r_ms.send(pickedImage, callback: {_,_,_ in
+                self.r_ms.send(pickedImage, callback: {_,_,_ in
                 dispatch_async(dispatch_get_main_queue()) {
                     self.bMS.enabled = true
                     self.label.text = ""
                 }
             })
-            r_ibm.send(pickedImage, callback: {_,_,_ in
+                self.r_ibm.send(pickedImage, callback: {_,_,_ in
                 dispatch_async(dispatch_get_main_queue()) {
                     self.bIBM.enabled = true
                     self.label.text = ""
                 }
+            })
             })
         }
         
