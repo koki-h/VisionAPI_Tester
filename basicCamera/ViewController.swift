@@ -76,23 +76,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             cameraView.image = pickedImage
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
                 self.r_google.send(pickedImage, callback: {_,_,_ in
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.bGoogle.enabled = true
-                    self.label.text = ""
-                }
-            })
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.bGoogle.enabled = true
+                        self.label.text = ""
+                    }
+                })
                 self.r_ms.send(pickedImage, callback: {_,_,_ in
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.bMS.enabled = true
-                    self.label.text = ""
-                }
-            })
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.bMS.enabled = true
+                        self.label.text = ""
+                    }
+                })
                 self.r_ibm.send(pickedImage, callback: {_,_,_ in
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.bIBM.enabled = true
-                    self.label.text = ""
-                }
-            })
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.bIBM.enabled = true
+                        self.label.text = ""
+                    }
+                })
             })
         }
         
@@ -125,10 +125,28 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     private func toggleLayer(api_type:API, text:String) {
         if current_result == api_type {
             hideLayer()
+            markActiveButton(API.None)
             current_result = API.None
         } else {
             showLayer(text)
+            markActiveButton(api_type)
             current_result = api_type
+        }
+    }
+    
+    private func markActiveButton(api_type:API) {
+        bGoogle.tintColor = bCameraStart.tintColor
+        bMS.tintColor = bCameraStart.tintColor
+        bIBM.tintColor = bCameraStart.tintColor
+        switch api_type {
+        case API.Google:
+            bGoogle.tintColor = UIColor.redColor()
+        case API.MS:
+            bMS.tintColor = UIColor.redColor()
+        case API.IBM:
+            bIBM.tintColor = UIColor.redColor()
+        default:
+            break
         }
     }
     
