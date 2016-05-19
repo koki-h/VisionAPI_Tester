@@ -52,7 +52,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func cameraStart(sender: AnyObject) {
-        current_result = API.None
         let sourceType:UIImagePickerControllerSourceType = UIImagePickerControllerSourceType.Camera
         // カメラが利用可能かチェック
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
@@ -60,6 +59,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let cameraPicker = UIImagePickerController()
             cameraPicker.sourceType = sourceType
             cameraPicker.delegate = self
+
+            current_result = API.None
             bGoogle.enabled = false
             bMS.enabled = false
             bIBM.enabled = false
@@ -101,9 +102,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         //閉じる処理
         imagePicker.dismissViewControllerAnimated(true, completion: nil)
         label.text = "APIに問い合わせ中.."
-        // APIにリクエスト送信
-        // TODO: 3つのAPIに並列でリクエストを送信する
-        
     }
     
     // 撮影がキャンセルされた時に呼ばれる
@@ -155,6 +153,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func initLayer() {
         scrollText.editable = false
         scrollText.hidden = true
+        current_result = API.None
+        markActiveButton(API.None)
     }
     
     func showLayer(text:String) {
