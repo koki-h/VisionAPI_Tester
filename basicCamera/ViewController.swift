@@ -17,6 +17,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var bGoogle: UIBarButtonItem!
     @IBOutlet weak var bMS: UIBarButtonItem!
     @IBOutlet weak var bIBM: UIBarButtonItem!
+    @IBOutlet weak var bSetting: UIBarButtonItem!
     @IBOutlet weak var label: UILabel!
 
     enum API{
@@ -36,7 +37,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         bGoogle.enabled = false
         bMS.enabled = false
         bIBM.enabled = false
-        label.text = "[撮影] をタップして写真を撮ると自動的にAPIに問い合わせます"
+        label.text = "カメラアイコンをタップして写真を撮ると自動的にAPIに問い合わせます"
     }
 
     override func didReceiveMemoryWarning() {
@@ -163,5 +164,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func hideLayer() {
         scrollText.hidden = true
     }
+    
+    @IBAction func unwindToTop(segue:UIStoryboardSegue) {} // 別画面からの戻り用
 }
 
