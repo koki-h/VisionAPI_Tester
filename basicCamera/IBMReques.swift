@@ -35,7 +35,7 @@ class IBMRequest: NSObject,APIRequest {
             let response_time = abs(Float(start_time.timeIntervalSinceNow))
             self.result = "Response Time:" + String.init(response_time) + "s\n"
             callback(data: data,response: response, error: error)
-            if (data != nil && data!.length != 0 && error == nil) {
+            if (data != nil && error == nil) {
                 do {
                     let result_dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as! NSDictionary
                     self.result += result_dict.description
