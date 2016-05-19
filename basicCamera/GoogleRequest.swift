@@ -14,7 +14,6 @@ import UIKit
 // 参考情報(APIキーの取得方法など)：https://syncer.jp/cloud-vision-api
 
 class GoogleRequest: NSObject,APIRequest {
-    let key = APIkeys.GoogleKey
     var result = ""
     
     func send(image: UIImage,callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->()) {
@@ -59,6 +58,7 @@ class GoogleRequest: NSObject,APIRequest {
     
     func createRequest(imageData: String) -> NSMutableURLRequest {
         // Create our request URL
+        let key = APIkeys.GoogleKey
         let request = NSMutableURLRequest(
             URL: NSURL(string: "https://vision.googleapis.com/v1/images:annotate?key=\(key)")!)
         request.HTTPMethod = "POST"

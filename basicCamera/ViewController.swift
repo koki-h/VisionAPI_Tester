@@ -33,6 +33,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        APIkeys.LoadKeySettings()
         current_result = API.None
         bGoogle.enabled = false
         bMS.enabled = false

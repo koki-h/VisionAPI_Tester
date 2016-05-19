@@ -12,7 +12,6 @@ import UIKit
 protocol APIRequest {
     func send(image:UIImage,callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->())
     var result:String {get}
-    var key:String {get}
 }
 
 class ImageUtil {

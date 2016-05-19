@@ -13,9 +13,6 @@ import UIKit
 // http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition.html
 
 class IBMRequest: NSObject,APIRequest {
-    let key      = ""
-    let uname    = APIkeys.IBMUname
-    let password = APIkeys.IBMPass
     var result:String = ""
     
     func send(image:UIImage,callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->()) {
@@ -52,6 +49,8 @@ class IBMRequest: NSObject,APIRequest {
     }
 
     func createRequest()->NSMutableURLRequest {
+        let uname    = APIkeys.IBMUname
+        let password = APIkeys.IBMPass
         let request = NSMutableURLRequest(
             URL: NSURL(string: "https://\(uname):\(password)@gateway.watsonplatform.net/visual-recognition-beta/api/v2/classify?version=2015-12-02")!)
         request.HTTPMethod = "POST"

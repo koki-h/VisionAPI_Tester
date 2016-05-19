@@ -13,7 +13,6 @@ import UIKit
 // https://www.microsoft.com/cognitive-services/en-us/computer-vision-api
 
 class MSRequest: NSObject,APIRequest {
-    let key = APIkeys.MSKey
     var result = ""
     
     func send(image:UIImage,callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->()) {
@@ -52,6 +51,7 @@ class MSRequest: NSObject,APIRequest {
     
     
     func createRequest()->NSMutableURLRequest {
+        let key = APIkeys.MSKey
         let request = NSMutableURLRequest(
             URL: NSURL(string: "https://api.projectoxford.ai/vision/v1/analyses?visualFeatures=ALL")!)
         request.HTTPMethod = "POST"
