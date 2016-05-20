@@ -13,7 +13,6 @@ class SettingViewController: UIViewController {
     @IBOutlet weak var txtMSKey: UITextField!
     @IBOutlet weak var txtIBMUsername: UITextField!
     @IBOutlet weak var txtIBMPassword: UITextField!
-    let ud = NSUserDefaults.standardUserDefaults()
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
