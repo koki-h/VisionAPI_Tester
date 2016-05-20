@@ -17,7 +17,7 @@ class MSRequest: NSObject,APIRequest {
     
     func send(image:UIImage,callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->()) {
         let request = createRequest()
-        var imagedata = UIImagePNGRepresentation(image)
+        var imagedata = UIImageJPEGRepresentation(image,1.0)
         
         // Resize the image if it exceeds the 4MB API limit
         if (imagedata?.length > 4194304) {

@@ -44,7 +44,7 @@ class GoogleRequest: NSObject,APIRequest {
     }
     
     func base64EncodeImage(image: UIImage) -> String {
-        var imagedata = UIImagePNGRepresentation(image)
+        var imagedata = UIImageJPEGRepresentation(image,1.0)
         
         // Resize the image if it exceeds the 2MB API limit
         if (imagedata?.length > 2097152) {

@@ -17,7 +17,7 @@ class IBMRequest: NSObject,APIRequest {
     
     func send(image:UIImage,callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->()) {
         let request = createRequest()
-        var imagedata = UIImagePNGRepresentation(image)
+        var imagedata = UIImageJPEGRepresentation(image,1.0)
         // とりあえず小さめに
         if (imagedata?.length > 2097152) {
             let oldSize: CGSize = image.size

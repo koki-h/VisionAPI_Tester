@@ -19,7 +19,7 @@ class ImageUtil {
         UIGraphicsBeginImageContext(imageSize)
         image.drawInRect(CGRectMake(0, 0, imageSize.width, imageSize.height))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        let resizedImage = UIImagePNGRepresentation(newImage)
+        let resizedImage = UIImageJPEGRepresentation(newImage,1.0)
         UIGraphicsEndImageContext()
         return resizedImage!
     }
