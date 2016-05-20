@@ -38,6 +38,9 @@ class IBMRequest: NSObject,APIRequest {
                     self.result += result_dict.description
                 } catch {
                     self.result += "IBM API JSON Parse Error.\n" + String.init(data: data!, encoding: NSUTF8StringEncoding)!
+                    if (response != nil) {
+                        self.result += "\n" + response!.description
+                    }
                 }
                 NSLog("IBM:%@",String.init(data: data!, encoding: NSUTF8StringEncoding)!)
             } else {
