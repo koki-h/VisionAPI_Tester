@@ -13,11 +13,11 @@ import UIKit
 // https://www.microsoft.com/cognitive-services/en-us/computer-vision-api
 
 class MSRequest: NSObject,APIRequest {
+    var url = ""
     var result = ""
     
     func send(image:UIImage,callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->()) {
         result = ""
-        let request = createVisualFeaturesRequest()
         var imagedata = UIImageJPEGRepresentation(image,1.0)
         
         // Resize the image if it exceeds the 4MB API limit
@@ -27,20 +27,22 @@ class MSRequest: NSObject,APIRequest {
             imagedata = ImageUtil.resizeImage(newSize, image: image)
         }
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-            self.sendRequest(request, imagedata: imagedata!)
-            while(self.result == "") {}
-            callback(data: nil,response: nil, error: nil)
+        let request = createRequest(url)
+        self.sendRequest(request, imagedata: imagedata!,
+                         callback: {
+                            data,responce,error in
+                            callback(data: data,response: responce, error: error)
         })
     }
     
-    func sendRequest(request:NSMutableURLRequest, imagedata:NSData) {
+    func sendRequest(request:NSMutableURLRequest, imagedata:NSData, callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->()) {
         let start_time = NSDate()
         let session = NSURLSession.sharedSession()
         let task = session.uploadTaskWithRequest(request, fromData: imagedata, completionHandler: {
             data, response, error -> Void in
             let response_time = abs(Float(start_time.timeIntervalSinceNow))
             self.result = "Response Time:" + String.init(response_time) + "s\n"
+            callback(data: data,response: response, error: error)
             if (data != nil && error == nil) {
                 do {
                     let result_dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as! NSDictionary
@@ -57,11 +59,6 @@ class MSRequest: NSObject,APIRequest {
         task.resume()
     }
     
-    func createVisualFeaturesRequest()->NSMutableURLRequest {
-        let url = "https://api.projectoxford.ai/vision/v1/analyses?visualFeatures=ALL"
-        return createRequest(url)
-    }
-    
     func createRequest(url:String)->NSMutableURLRequest {
         let key = APIkeys.MSKey
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
@@ -70,5 +67,18 @@ class MSRequest: NSObject,APIRequest {
         request.addValue(key, forHTTPHeaderField: "Ocp-Apim-Subscription-Key")
         return request
     }
+}
 
+class MSVisualFeaturesRequest: MSRequest {
+    override init() {
+        super.init()
+        self.url = "https://api.projectoxford.ai/vision/v1/analyses?visualFeatures=ALL"
+    }
+}
+
+class MSDescriveRequest: MSRequest {
+    override init() {
+        super.init()
+        self.url = "https://api.projectoxford.ai/vision/v1.0/describe"
+    }
 }

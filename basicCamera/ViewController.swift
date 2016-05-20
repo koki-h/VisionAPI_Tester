@@ -28,7 +28,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     var current_result:API = API.None
     let r_google = GoogleRequest()
-    let r_ms = MSRequest()
+    let r_ms_v = MSVisualFeaturesRequest()
+    let r_ms_d = MSDescriveRequest()
     let r_ibm = IBMRequest()
     
     override func viewDidLoad() {
@@ -84,10 +85,25 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                         self.label.text = ""
                     }
                 })
-                self.r_ms.send(pickedImage, callback: {_,_,_ in
+                var ms_req_comp = false
+                self.r_ms_v.send(pickedImage, callback: {_,_,_ in
                     dispatch_async(dispatch_get_main_queue()) {
-                        self.bMS.enabled = true
-                        self.label.text = ""
+                        if (ms_req_comp) {
+                            self.bMS.enabled = true
+                            self.label.text = ""
+                        } else {
+                            ms_req_comp = true
+                        }
+                    }
+                })
+                self.r_ms_d.send(pickedImage, callback: {_,_,_ in
+                    dispatch_async(dispatch_get_main_queue()) {
+                        if (ms_req_comp) {
+                            self.bMS.enabled = true
+                            self.label.text = ""
+                        } else {
+                            ms_req_comp = true
+                        }
                     }
                 })
                 self.r_ibm.send(pickedImage, callback: {_,_,_ in
@@ -115,7 +131,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func showResultMS(sender: AnyObject) {
-        toggleLayer(API.MS, text: r_ms.result)
+        toggleLayer(API.MS, text: r_ms_v.result + "\n" + r_ms_d.result)
     }
 
     @IBAction func showResultIBM(sender: AnyObject) {
