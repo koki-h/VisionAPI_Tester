@@ -51,10 +51,15 @@ class IBMRequest: NSObject,APIRequest {
     func createRequest()->NSMutableURLRequest {
         let uname    = APIkeys.IBMUname
         let password = APIkeys.IBMPass
+        let userPasswordString = "\(uname):\(password)"
+        let userPasswordData = userPasswordString.dataUsingEncoding(NSUTF8StringEncoding)
+        let base64EncodedCredential = userPasswordData!.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.EncodingEndLineWithLineFeed)
+        let authString = "Basic \(base64EncodedCredential)"
         let request = NSMutableURLRequest(
-            URL: NSURL(string: "https://\(uname):\(password)@gateway.watsonplatform.net/visual-recognition-beta/api/v2/classify?version=2015-12-02")!)
+            URL: NSURL(string: "https://gateway.watsonplatform.net/visual-recognition-beta/api/v2/classify?version=2015-12-02")!)
         request.HTTPMethod = "POST"
         request.addValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
+        request.addValue(authString, forHTTPHeaderField: "Authorization")
         return request
     }
 
