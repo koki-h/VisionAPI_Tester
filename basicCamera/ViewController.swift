@@ -65,6 +65,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             bGoogle.enabled = false
             bMS.enabled = false
             bIBM.enabled = false
+            clearFaceRect()
             self.presentViewController(cameraPicker, animated: true, completion: nil)
         }
         else{
@@ -130,12 +131,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         toggleLayer(API.Google, text: r_google.result)
         clearFaceRect()
         let face_layers = r_google.faceRectLayers(cameraView)
-        drawFaceRect(face_layers!)
+        drawFaceRect(face_layers)
     }
     
     @IBAction func showResultMS(sender: AnyObject) {
         toggleLayer(API.MS, text: r_ms_v.result + "\n" + r_ms_d.result)
         clearFaceRect()
+        let face_layers = r_ms_v.faceRectLayers(cameraView)
+        drawFaceRect(face_layers)
     }
 
     @IBAction func showResultIBM(sender: AnyObject) {
@@ -143,8 +146,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         clearFaceRect()
     }
     
-    private func drawFaceRect(face_layers:Array<UIView>) {
-        face_layers.forEach{layer in
+    private func drawFaceRect(face_layers:Array<UIView>?) {
+        if face_layers == nil {
+            return
+        }
+        face_layers!.forEach{layer in
             cameraView.addSubview(layer)
         }
     }
