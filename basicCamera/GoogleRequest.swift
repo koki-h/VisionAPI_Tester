@@ -114,9 +114,6 @@ class GoogleRequest: NSObject,APIRequest {
             x2 = Double(Util.nilZero(boundings!![2]["x"]) as! Int) * resize_rate
             y2 = Double(Util.nilZero(boundings!![2]["y"]) as! Int) * resize_rate
             let layer = ImageUtil.makeRectLayer(x, y: y, width: x2-x, height: y2-y, color: UIColor.redColor())
-//            let label:UILabel = UILabel(frame: CGRect(x: 0,y: 0,width: 100,height: 100))
-//            label.text = "x:\(x),y:\(y)"
-//            layer.addSubview(label)
             face_layers.append(layer)
         }
         return face_layers
