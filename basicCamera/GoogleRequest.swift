@@ -15,8 +15,12 @@ import UIKit
 
 class GoogleRequest: NSObject,APIRequest {
     var result = ""
+    var result_dict = NSDictionary()
+    var upload_image_size = CGSize()
     
     func send(image: UIImage,callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->()) {
+        result = ""
+        result_dict = NSDictionary()
         let imagedata:String = base64EncodeImage(image) // 画像をJSONに入れるためにbase64エンコードする
         let request = createRequest(imagedata)
         let start_time = NSDate()
@@ -29,8 +33,8 @@ class GoogleRequest: NSObject,APIRequest {
             callback(data: data,response: response, error: error)
             if (data != nil && error == nil) {
                 do {
-                    let result_dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as! NSDictionary
-                    self.result += result_dict.description
+                    self.result_dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as! NSDictionary
+                    self.result += self.result_dict.description
                 } catch {
                     self.result += "Google API JSON Parse Error.¥n" + String.init(data: data!, encoding: NSUTF8StringEncoding)!
                 }
@@ -50,7 +54,10 @@ class GoogleRequest: NSObject,APIRequest {
         if (imagedata?.length > 2097152) {
             let oldSize: CGSize = image.size
             let newSize: CGSize = CGSizeMake(800, oldSize.height / oldSize.width * 800)
+            upload_image_size = newSize
             imagedata = ImageUtil.resizeImage(newSize, image: image)
+        } else {
+            upload_image_size = image.size
         }
         
         return imagedata!.base64EncodedStringWithOptions(.EncodingEndLineWithCarriageReturn)
@@ -90,5 +97,28 @@ class GoogleRequest: NSObject,APIRequest {
         request.HTTPBody = try! NSJSONSerialization.dataWithJSONObject(jsonRequest, options: [])
         
         return request
+    }
+    
+    func faceRectLayers(camera_view:UIImageView)-> Array<UIView>? {
+        let resize_rate = Double(camera_view.frame.width / upload_image_size.width)
+        var face_layers:[UIView] = []
+        let faces = result_dict["responses"]![0]["faceAnnotations"] as? NSArray
+        if (faces == nil) {
+            return nil
+        }
+        for face in faces! {
+            var x=0.0, y=0.0, x2=0.0, y2=0.0
+            let boundings = face["boundingPoly"]!!["vertices"]
+            x  = Double(Util.nilZero(boundings!![0]["x"]) as! Int) * resize_rate + Double(camera_view.frame.origin.x)
+            y  = Double(Util.nilZero(boundings!![0]["y"]) as! Int) * resize_rate + Double(camera_view.frame.origin.y)
+            x2 = Double(Util.nilZero(boundings!![2]["x"]) as! Int) * resize_rate
+            y2 = Double(Util.nilZero(boundings!![2]["y"]) as! Int) * resize_rate
+            let layer = ImageUtil.makeRectLayer(x, y: y, width: x2-x, height: y2-y, color: UIColor.redColor())
+//            let label:UILabel = UILabel(frame: CGRect(x: 0,y: 0,width: 100,height: 100))
+//            label.text = "x:\(x),y:\(y)"
+//            layer.addSubview(label)
+            face_layers.append(layer)
+        }
+        return face_layers
     }
 }

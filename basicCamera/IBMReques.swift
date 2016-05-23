@@ -13,9 +13,12 @@ import UIKit
 // http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition.html
 
 class IBMRequest: NSObject,APIRequest {
-    var result:String = ""
+    var result = ""
+    var result_dict = NSDictionary()
     
     func send(image:UIImage,callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->()) {
+        result = ""
+        result_dict = NSDictionary()
         let oldSize: CGSize = image.size
         let newSize: CGSize = CGSizeMake(320, oldSize.height / oldSize.width * 320) //サイズは320px程度で良いとのこと
         let imagedata = ImageUtil.resizeImage(newSize, image: image)
@@ -31,8 +34,8 @@ class IBMRequest: NSObject,APIRequest {
             callback(data: data,response: response, error: error)
             if (data != nil && error == nil) {
                 do {
-                    let result_dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as! NSDictionary
-                    self.result += result_dict.description
+                    self.result_dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as! NSDictionary
+                    self.result += self.result_dict.description
                 } catch {
                     self.result += "IBM API JSON Parse Error.\n" + String.init(data: data!, encoding: NSUTF8StringEncoding)!
                     if (response != nil) {

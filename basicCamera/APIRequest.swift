@@ -23,4 +23,20 @@ class ImageUtil {
         UIGraphicsEndImageContext()
         return resizedImage!
     }
+    static func makeRectLayer(x:Double,y:Double,width:Double,height:Double, color:UIColor)-> UIView{
+        let face_rect = CGRect(x: x, y: y, width: width, height: height)
+        let faceOutline = UIView(frame: face_rect)
+        faceOutline.layer.borderWidth = 1
+        faceOutline.layer.borderColor = color.CGColor
+        return faceOutline
+    }
+}
+class Util {
+    static func nilZero(nillable:AnyObject?)->AnyObject? {
+        if (nillable == nil) {
+            return 0.0
+        } else {
+            return nillable
+        }
+    }
 }

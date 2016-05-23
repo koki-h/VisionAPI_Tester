@@ -15,9 +15,11 @@ import UIKit
 class MSRequest: NSObject,APIRequest {
     var url = ""
     var result = ""
+    var result_dict = NSDictionary()
     
     func send(image:UIImage,callback:(data:NSData?, response:NSURLResponse?, error:NSError?)->()) {
         result = ""
+        result_dict = NSDictionary()
         var imagedata = UIImageJPEGRepresentation(image,1.0)
         
         // Resize the image if it exceeds the 4MB API limit
@@ -45,8 +47,8 @@ class MSRequest: NSObject,APIRequest {
             callback(data: data,response: response, error: error)
             if (data != nil && error == nil) {
                 do {
-                    let result_dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as! NSDictionary
-                    self.result += result_dict.description
+                    self.result_dict = try NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers) as! NSDictionary
+                    self.result += self.result_dict.description
                 } catch {
                     self.result += "MS API JSON Parse Error.\n" + String.init(data: data!, encoding: NSUTF8StringEncoding)!
                 }

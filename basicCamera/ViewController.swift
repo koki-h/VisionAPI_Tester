@@ -128,14 +128,30 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction func showResultGoogle(sender: AnyObject) {
         toggleLayer(API.Google, text: r_google.result)
+        clearFaceRect()
+        let face_layers = r_google.faceRectLayers(cameraView)
+        drawFaceRect(face_layers!)
     }
     
     @IBAction func showResultMS(sender: AnyObject) {
         toggleLayer(API.MS, text: r_ms_v.result + "\n" + r_ms_d.result)
+        clearFaceRect()
     }
 
     @IBAction func showResultIBM(sender: AnyObject) {
         toggleLayer(API.IBM, text: r_ibm.result)
+        clearFaceRect()
+    }
+    
+    private func drawFaceRect(face_layers:Array<UIView>) {
+        face_layers.forEach{layer in
+            cameraView.addSubview(layer)
+        }
+    }
+    private func clearFaceRect() {
+        cameraView.subviews.forEach{subview in
+            subview.removeFromSuperview()
+        }
     }
     
     private func toggleLayer(api_type:API, text:String) {
